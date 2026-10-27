@@ -1,0 +1,10 @@
+# Local/system files
+.DS_Store
+Thumbs.db
+__pycache__/
+*.py[cod]
+
+# Local review artifacts
+preview-*.png
+*-verification.json
+*-review.json

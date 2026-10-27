@@ -1,0 +1,1 @@
+The cars smoothly move forward along the road, gradually increasing in speed while maintaining lanes.
