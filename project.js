@@ -1,6 +1,6 @@
 // Resource URLs are intentionally empty until the paper and code are public.
 for(const link of document.querySelectorAll('[data-placeholder-link]'))link.addEventListener('click',event=>event.preventDefault());
-import {ComparisonPose} from './assets/js/comparison-pose.js';
+import {ComparisonPose} from './assets/js/comparison-pose.js?v=bilingual-v14';
 const $=id=>document.getElementById(id);
 const mediaObserver=new IntersectionObserver(entries=>{
   for(const {target,isIntersecting} of entries){

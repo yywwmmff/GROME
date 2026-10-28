@@ -205,6 +205,7 @@ a.diagram-fallback{display:flex;flex-direction:column;align-items:center;justify
 #applications .application-description{min-height:0;padding:24px 0}
 #applications .application-description h3{margin:0 0 12px}
 #applications .application-description p{max-width:960px}
+#applications .application-card:first-child .application-description p{max-width:none}
 .application-letter{color:var(--orange);margin-right:8px}
 .application-media-row{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:24px;align-items:stretch}
 .application-output{min-width:0}
@@ -410,3 +411,15 @@ a.diagram-fallback{background:transparent;color:var(--muted)}
 /* Keep the research summary on one desktop line. */
 .project-hero .hero-abstract{max-width:none}
 @media(min-width:901px){.project-hero .hero-abstract{white-space:nowrap;font-size:clamp(14px,1.35vw,19px)}}
+
+/* Core idea title and description occupy one aligned desktop row. */
+#memory>.section-heading{display:block}
+#memory .core-heading-row{display:grid;grid-template-columns:max-content minmax(0,1fr);align-items:center;gap:32px}
+#memory .core-heading-row h2{white-space:nowrap;font-size:clamp(30px,2.4vw,38px);line-height:1.6;letter-spacing:-1.1px}
+#memory .core-heading-row .section-copy{max-width:none;margin:0;font-size:clamp(16px,1.2vw,17px);line-height:1.6;min-height:3.2em;display:flex;align-items:center}
+#comparisons>.section-heading h2{white-space:nowrap;font-size:clamp(28px,3.5vw,50px)}
+@media(max-width:1279px){#memory .core-heading-row{display:block}#memory .core-heading-row .section-copy{margin-top:16px;display:block;min-height:0}}
+@media(max-width:600px){
+ #memory .core-heading-row h2,#comparisons>.section-heading h2{font-size:clamp(18px,5.2vw,30px);line-height:1.4;letter-spacing:-.4px}
+ #memory .core-heading-row .section-copy{font-size:16px;line-height:1.8}
+}

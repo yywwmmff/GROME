@@ -4,7 +4,7 @@ export class ComparisonPose{
   this.canvas=canvas;this.video=video;this.context=canvas.getContext('2d');this.poses=[];this.visible=false;this.lastFrame=-1;this.dirty=true;
   new ResizeObserver(()=>{this.width=canvas.clientWidth;this.height=canvas.clientHeight;const ratio=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(this.width*ratio);canvas.height=Math.round(this.height*ratio);this.context.setTransform(ratio,0,0,ratio,0,0);this.dirty=true;this.draw();}).observe(canvas);
   new IntersectionObserver(entries=>{this.visible=entries[0].isIntersecting;if(this.visible)this.dirty=true;},{rootMargin:'100px'}).observe(canvas);
-  window.addEventListener('grome-theme-change',()=>{this.dirty=true;this.draw();});
+  for(const event of ['grome-theme-change','grome-language-change'])window.addEventListener(event,()=>{this.dirty=true;this.draw();});
   const tick=()=>{if(this.visible&&!document.hidden)this.draw();requestAnimationFrame(tick);};tick();
  }
  clear(){this.poses=[];this.lastFrame=-1;delete this.canvas.dataset.poseFrame;delete this.canvas.dataset.poseCount;this.context.clearRect(0,0,this.width||0,this.height||0);}
@@ -30,6 +30,6 @@ export class ComparisonPose{
    if(active){c.beginPath();c.arc(points[0].x,points[0].y,3.2,0,Math.PI*2);c.fillStyle=accent;c.fill();}
   };
   const stride=Math.max(1,Math.ceil(this.poses.length/10));for(let i=0;i<this.poses.length;i+=stride)frustum(this.poses[i],false);frustum(this.poses[this.poses.length-1],false);frustum(this.poses[frame],true);
-  c.font='500 12px Manrope, sans-serif';c.fillStyle=muted;c.fillText('GROME current view',10,h-10);
+  c.font='500 12px Manrope, sans-serif';c.fillStyle=muted;c.fillText(window.GROME_I18N?.t('GROME current view')??'GROME current view',10,h-10);
  }
 }
