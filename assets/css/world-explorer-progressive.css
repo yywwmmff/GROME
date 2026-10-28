@@ -119,3 +119,13 @@
 #explorer .stage-topline .explorer-intro h3{font-size:20px;line-height:1.12;letter-spacing:-.35px}
 #explorer .stage-topline .explorer-intro h3 span{color:var(--orange)}
 @media(max-width:700px){#explorer .stage-topline{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px}#explorer .stage-topline .explorer-intro{padding:0}#explorer .stage-topline .explorer-intro h3{font-size:17px}.stage-topline .case-tabs{margin-left:auto}}
+
+/* Share the full column height between reconstruction and warp views. */
+#explorer .progressive-panel>.view-heading,
+#explorer .progressive-panel>.progressive-subheading{flex-shrink:0}
+#explorer .progressive-panel .building-canvas,
+#explorer .explorer-triptych .progressive-panel .warp-viewport{height:auto;min-height:190px;flex:1 1 0}
+@media(max-width:700px){
+  #explorer .progressive-panel .building-canvas,
+  #explorer .explorer-triptych .progressive-panel .warp-viewport{height:auto;min-height:0;flex:none;aspect-ratio:3/2}
+}

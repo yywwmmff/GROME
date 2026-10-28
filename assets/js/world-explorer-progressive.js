@@ -105,8 +105,8 @@ $('hero-play').addEventListener('click',play);
 $('seek').addEventListener('input',event=>seek(Number(event.target.value)));
 $('restart').addEventListener('click',()=>seek(0));
 $('speed').addEventListener('change',event=>{rgb.playbackRate=geometry.playbackRate=Number(event.target.value);});
-rgb.addEventListener('pause',()=>{if(playing&&rgb.paused)pause();});
-rgb.addEventListener('ended',()=>{if($('loop').checked){seek(0);play();}else pause();});
+rgb.addEventListener('pause',()=>{if(playing&&rgb.paused&&!rgb.ended)pause();});
+for(const video of [rgb,geometry])video.addEventListener('ended',()=>{if(playing&&video.ended){seek(0);play();}});
 rgb.addEventListener('waiting',()=>{if(playing)geometry.pause();});
 rgb.addEventListener('playing',()=>{if(playing&&!rgb.paused&&!rgb.ended)geometry.play().catch(()=>{});});
 rgb.addEventListener('seeked',()=>{if(Math.abs(rgb.currentTime-geometry.currentTime)>.04)geometry.currentTime=rgb.currentTime;sceneFrame=-1;});
@@ -241,7 +241,7 @@ function material(size,extra={}){return new THREE.PointsMaterial({size,sizeAtten
 function cloudGeometry(positions,colors){const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(positions,3));g.setAttribute('color',new THREE.BufferAttribute(colors,3));return g;}
 function binaryCloud(buffer){const count=new DataView(buffer).getUint32(0,true);return cloudGeometry(new Float32Array(buffer,4,count*3),colorsToLinear(new Uint8Array(buffer,4+count*12,count*3)));}
 async function getFile(url,type){const response=await fetch(url,{cache:type==='json'?'no-cache':'default'});if(!response.ok)throw new Error(`${url}: ${response.status}`);return type==='json'?response.json():response.arrayBuffer();}
-function makeRenderer(id){const r=new THREE.WebGLRenderer({antialias:true,alpha:false,powerPreference:'high-performance'});r.setPixelRatio(Math.min(devicePixelRatio,1.5));r.outputColorSpace=THREE.SRGBColorSpace;r.setClearColor(0x070c11,1);$(id).append(r.domElement);return r;}
+function makeRenderer(id){const r=new THREE.WebGLRenderer({antialias:true,alpha:true,powerPreference:'high-performance'});r.setPixelRatio(Math.min(devicePixelRatio,1.5));r.outputColorSpace=THREE.SRGBColorSpace;r.setClearColor(0x000000,0);$(id).append(r.domElement);return r;}
 function initWorld(){
   try{
     renderer=makeRenderer('world-canvas');buildingRenderer=makeRenderer('building-canvas');world=new THREE.Scene();
@@ -361,11 +361,12 @@ async function loadWorld(base,token){
 async function choose(index){
   pause();selected=scenes[index];const token=++sceneToken;$('media-error').hidden=true;
   $('play').disabled=true;$('seek').disabled=true;$('seek').max=selected.duration;
-  const base=selected.asset_base??`assets/vista4d/${encodeURIComponent(selected.name)}/`;
+  const base=selected.asset_base;
   rgb.src=base+'generation.mp4';geometry.src=base+(selected.online_warp??'online_warp.mp4');rgb.poster=base+'poster.jpg';geometry.poster=base+'online_warp_poster.jpg';
   const complex=selected.comparison_mode==='complex';
   $('explorer-story-title').innerHTML=complex?'One scene.<br><span>Connected by memory.</span>':'Leave a place.<br><span>Return to the same view.</span>';
   $('explorer-story-copy').textContent=complex?selected.comparison_description:'Follow the camera through a generated world. Select a marked viewpoint to compare its first visit and later returns.';
+  $('explorer-input-prompt').textContent=selected.display_prompt??selected.prompt??'';
   $('camera-count').textContent=selected.frames;
   $('cloud-download').href=base+'scene.ply';
   const note=inspection[selected.name];$('inspection-title').textContent=note?.title??'Structure. Motion. Perspective.';$('inspection-copy').textContent=note?.copy??'Inspect geometry and recent motion in the same scene.';
@@ -388,10 +389,10 @@ function tick(){
 }
 new IntersectionObserver(entries=>{if(entries.some(entry=>!entry.isIntersecting)&&playing)pause();},{threshold:.01}).observe($('world-showcase'));
 initWorld();
-getFile($('explorer').dataset.manifest??'assets/vista4d/cases.json','json').then(data=>{
+getFile($('explorer').dataset.manifest,'json').then(data=>{
   scenes=data;if(!scenes.length)throw new Error('No completed scenes');
   scenes.forEach((scene,index)=>{const button=document.createElement('button');button.className='case-tab';button.type='button';button.setAttribute('aria-label',`Choose ${scene.title??names[scene.name]??scene.name}`);
-    const image=document.createElement('img');image.src=(scene.asset_base??`assets/vista4d/${encodeURIComponent(scene.name)}/`)+'poster.jpg';image.alt='';const label=document.createElement('span');label.textContent=scene.title??names[scene.name]??scene.name;const number=document.createElement('small');number.textContent=String(index+1).padStart(2,'0');button.append(image,label,number);button.addEventListener('click',()=>choose(index));$('case-tabs').append(button);});
+    const image=document.createElement('img');image.src=(scene.asset_base)+'poster.jpg';image.alt='';const label=document.createElement('span');label.textContent=scene.title??names[scene.name]??scene.name;const number=document.createElement('small');number.textContent=String(index+1).padStart(2,'0');button.append(image,label,number);button.addEventListener('click',()=>choose(index));$('case-tabs').append(button);});
   choose(0);
 }).catch(error=>fail('The scene manifest could not be loaded. Serve this page over HTTP and reload.'));
 tick();

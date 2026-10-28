@@ -3,9 +3,26 @@
 const SVG_NS='http://www.w3.org/2000/svg';
 const clamp=value=>Math.max(0,Math.min(1,value));
 const ease=value=>{value=clamp(value);return value*value*(3-2*value);};
+// Source slides used a dark palette; adapt vector fills without altering their bitmap evidence.
+function prepareDiagramTheme(svg){
+  for(const node of svg.querySelectorAll('[fill],[stroke]')){
+    const text=Boolean(node.closest('text'));
+    for(const attr of ['fill','stroke']){
+      const color=node.getAttribute(attr);if(!/^#[0-9a-f]{6}$/i.test(color??''))continue;
+      const rgb=[1,3,5].map(offset=>parseInt(color.slice(offset,offset+2),16)),light=rgb.reduce((a,b)=>a+b,0)/3;
+      let replacement;
+      if(text)replacement=['#e2e8ed','#b6c1ca','#d5e4eb'].includes(color)?'var(--text)':`color-mix(in srgb, ${color} 25%, #27313b)`;
+      else if(attr==='fill'&&color==='#1d3921')replacement='#376847';
+      else if(attr==='fill'&&light<125)replacement=`color-mix(in srgb, ${color} 9%, var(--surface))`;
+      else if(attr==='stroke')replacement=`color-mix(in srgb, ${color} 55%, #58616a)`;
+      if(replacement){node.dataset['light'+attr[0].toUpperCase()+attr.slice(1)]='';node.style.setProperty('--diagram-light-'+attr,replacement);}
+    }
+  }
+}
 class DiagramPlayer{
   constructor(element){
     this.element=element;this.stage=element.querySelector('.diagram-stage');this.tabs=[...element.querySelectorAll('[data-diagram-step]')];
+    this.playbackRate=Math.max(.1,Number(element.dataset.playbackRate)||1);
     this.playButton=element.querySelector('.diagram-play');this.overview=element.querySelector('.diagram-overview');
     this.paused=matchMedia('(prefers-reduced-motion: reduce)').matches;this.full=this.paused;this.time=.5;this.last=0;this.visible=false;this.index=-2;this.parts=[];
     const controls=element.querySelector('.diagram-playback');
@@ -28,7 +45,7 @@ class DiagramPlayer{
     try{
       const response=await fetch(this.element.dataset.asset);if(!response.ok)throw Error('Figure asset unavailable');
       const doc=new DOMParser().parseFromString(await response.text(),'image/svg+xml');if(doc.querySelector('parsererror'))throw Error('Figure could not be parsed');
-      this.svg=document.importNode(doc.documentElement,true);this.svg.removeAttribute('width');this.svg.removeAttribute('height');
+      this.svg=document.importNode(doc.documentElement,true);this.svg.removeAttribute('width');this.svg.removeAttribute('height');prepareDiagramTheme(this.svg);
       let start=0;this.steps=JSON.parse(this.svg.dataset.animationSteps).map(step=>{const item={...step,start};start+=step.duration;return item;});this.contentDuration=start;this.duration=start+3;
       this.scrub.max=String(this.contentDuration);this.element.querySelector('.diagram-vector').append(this.svg);
       this.parts=[...this.svg.querySelectorAll('[data-reveal]')].map(node=>{
@@ -78,7 +95,7 @@ class DiagramPlayer{
   }
   updatePlayback(){this.element.classList.toggle('is-paused',this.paused);this.playButton.textContent=this.paused?'▶ Play':'Ⅱ Pause';this.playButton.setAttribute('aria-label',this.paused?'Play component animation':'Pause component animation');}
   tick(time){
-    if(this.visible&&!this.paused&&this.steps&&!document.hidden){if(this.last)this.time+=Math.min(time-this.last,100)/1000;if(this.time>=this.duration){this.time=0;this.index=-2;}this.render();}
+    if(this.visible&&!this.paused&&this.steps&&!document.hidden){if(this.last)this.time+=Math.min(time-this.last,100)/1000*this.playbackRate;if(this.time>=this.duration){this.time=0;this.index=-2;}this.render();}
     this.last=time;requestAnimationFrame(next=>this.tick(next));
   }
 }

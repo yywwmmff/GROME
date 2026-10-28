@@ -1,0 +1,665 @@
+{
+  "static": [
+    {
+      "id": "scene-interior",
+      "title": "A familiar interior",
+      "prompt": "Sunlight brightens a living room with an elegant staircase, wooden console, artwork, and plants.",
+      "video": "videos/more_results/static/video2.mp4",
+      "input_image": "assets/memory-cases/scene-interior/input_image.png",
+      "duration": 13.208333,
+      "actions": [
+        {
+          "start": 0.0,
+          "end": 1.8391349746835441,
+          "keys": [
+            "s"
+          ],
+          "look": ""
+        },
+        {
+          "start": 1.8391349746835441,
+          "end": 4.514240392405063,
+          "keys": [
+            "a"
+          ],
+          "look": ""
+        },
+        {
+          "start": 4.514240392405063,
+          "end": 7.189345810126582,
+          "keys": [
+            "d"
+          ],
+          "look": ""
+        },
+        {
+          "start": 7.189345810126582,
+          "end": 9.195674873417722,
+          "keys": [
+            "w"
+          ],
+          "look": ""
+        },
+        {
+          "start": 9.195674873417722,
+          "end": 11.20200393670886,
+          "keys": [],
+          "look": "left"
+        },
+        {
+          "start": 11.20200393670886,
+          "end": 13.208333,
+          "keys": [],
+          "look": "right"
+        }
+      ],
+      "action_source": "camera_data.json / trajectory_reviewer.infer_sequence"
+    },
+    {
+      "id": "scene-waterfall",
+      "title": "Waterfall at Sunset",
+      "prompt": "A majestic waterfall descends over lush cliffs beneath a colorful sky.",
+      "video": "videos/more_results/static/video3.mp4",
+      "input_image": "assets/memory-cases/scene-waterfall/input_image.png",
+      "duration": 18.541667,
+      "actions": [
+        {
+          "start": 0.0,
+          "end": 2.0045045405405406,
+          "keys": [
+            "s"
+          ],
+          "look": ""
+        },
+        {
+          "start": 2.0045045405405406,
+          "end": 4.009009081081081,
+          "keys": [
+            "a"
+          ],
+          "look": ""
+        },
+        {
+          "start": 4.009009081081081,
+          "end": 5.345345441441442,
+          "keys": [],
+          "look": "right"
+        },
+        {
+          "start": 5.345345441441442,
+          "end": 9.688438612612613,
+          "keys": [
+            "w"
+          ],
+          "look": ""
+        },
+        {
+          "start": 9.688438612612613,
+          "end": 12.528153378378379,
+          "keys": [],
+          "look": "left"
+        },
+        {
+          "start": 12.528153378378379,
+          "end": 14.532657918918918,
+          "keys": [
+            "d"
+          ],
+          "look": ""
+        },
+        {
+          "start": 14.532657918918918,
+          "end": 16.20307836936937,
+          "keys": [
+            "w"
+          ],
+          "look": ""
+        },
+        {
+          "start": 16.20307836936937,
+          "end": 18.541667,
+          "keys": [],
+          "look": "right"
+        }
+      ],
+      "action_source": "camera_data.json / trajectory_reviewer.infer_sequence"
+    },
+    {
+      "id": "scene-dining-041",
+      "title": "The sunlit kitchen",
+      "prompt": "Warm sunlight illuminates a modern kitchen island and elegant pendant lights.",
+      "video": "videos/memory/scene-dining-041.mp4",
+      "input_image": "assets/memory-cases/scene-dining-041/input_image.png",
+      "duration": 13.208333,
+      "actions": [
+        {
+          "start": 0.0,
+          "end": 1.8391349746835441,
+          "keys": [
+            "s"
+          ],
+          "look": ""
+        },
+        {
+          "start": 1.8391349746835441,
+          "end": 4.514240392405063,
+          "keys": [
+            "a"
+          ],
+          "look": ""
+        },
+        {
+          "start": 4.514240392405063,
+          "end": 7.189345810126582,
+          "keys": [
+            "d"
+          ],
+          "look": ""
+        },
+        {
+          "start": 7.189345810126582,
+          "end": 9.195674873417722,
+          "keys": [
+            "w"
+          ],
+          "look": ""
+        },
+        {
+          "start": 9.195674873417722,
+          "end": 11.20200393670886,
+          "keys": [],
+          "look": "left"
+        },
+        {
+          "start": 11.20200393670886,
+          "end": 13.208333,
+          "keys": [],
+          "look": "right"
+        }
+      ],
+      "action_source": "camera_data.json / trajectory_reviewer.infer_sequence"
+    },
+    {
+      "id": "scene-living-010",
+      "title": "The cozy bedroom",
+      "prompt": "In the Cozy Bedroom Retreat, the inviting bed with soft pillows and adjacent chairs create a warm and stylish atmosphere.",
+      "video": "videos/memory/scene-living-010.mp4",
+      "input_image": "assets/memory-cases/scene-living-010/input_image.png",
+      "duration": 15.208333,
+      "actions": [
+        {
+          "start": 0.0,
+          "end": 3.1753662307692307,
+          "keys": [
+            "a"
+          ],
+          "look": ""
+        },
+        {
+          "start": 3.1753662307692307,
+          "end": 9.191849615384614,
+          "keys": [
+            "d"
+          ],
+          "look": ""
+        },
+        {
+          "start": 9.191849615384614,
+          "end": 11.86584223076923,
+          "keys": [
+            "a"
+          ],
+          "look": ""
+        },
+        {
+          "start": 11.86584223076923,
+          "end": 15.208333,
+          "keys": [
+            "s"
+          ],
+          "look": ""
+        }
+      ],
+      "action_source": "camera_data.json / trajectory_reviewer.infer_sequence"
+    },
+    {
+      "id": "scene-city-intersection-068",
+      "title": "The city intersection",
+      "prompt": "The cars move forward along the urban street, smoothly navigating through the intersection. They maintain a steady speed, aligning with traffic signals and merging seamlessly with other vehicles.",
+      "video": "videos/more_results/dynamic/video5.mp4",
+      "poster": "assets/posters/more_results/dynamic/video5.jpg",
+      "input_image": "assets/memory-cases/scene-city-intersection-068/input_image.png",
+      "duration": 18.541667,
+      "actions": [
+        {
+          "start": 0.0,
+          "end": 2.1715465855855856,
+          "keys": [
+            "d"
+          ],
+          "look": ""
+        },
+        {
+          "start": 2.1715465855855856,
+          "end": 4.5101352162162165,
+          "keys": [
+            "s"
+          ],
+          "look": ""
+        },
+        {
+          "start": 4.5101352162162165,
+          "end": 6.681681801801802,
+          "keys": [
+            "a"
+          ],
+          "look": ""
+        },
+        {
+          "start": 6.681681801801802,
+          "end": 9.020270432432433,
+          "keys": [
+            "w"
+          ],
+          "look": ""
+        },
+        {
+          "start": 9.020270432432433,
+          "end": 11.19181701801802,
+          "keys": [
+            "d"
+          ],
+          "look": ""
+        },
+        {
+          "start": 11.19181701801802,
+          "end": 13.53040564864865,
+          "keys": [
+            "s"
+          ],
+          "look": ""
+        },
+        {
+          "start": 13.53040564864865,
+          "end": 15.701952234234234,
+          "keys": [
+            "a"
+          ],
+          "look": ""
+        },
+        {
+          "start": 15.701952234234234,
+          "end": 18.040540864864866,
+          "keys": [
+            "w"
+          ],
+          "look": ""
+        },
+        {
+          "start": 18.040540864864866,
+          "end": 18.541667,
+          "keys": [
+            "d"
+          ],
+          "look": ""
+        }
+      ],
+      "action_source": "/cos/legomem_demo/sections/more_results/cases/dynamic_photorealistic_rigid_068/camera_data.json / trajectory_reviewer.infer_sequence"
+    }
+  ],
+  "dynamic": [
+    {
+      "id": "dynamic-cow",
+      "title": "The grazing cow",
+      "prompt": "A cow moves through a meadow, pausing to lower its head and graze.",
+      "video": "videos/more_results/dynamic/video2.mp4",
+      "input_image": "assets/memory-cases/dynamic-cow/input_image.png",
+      "duration": 18.541667,
+      "actions": [
+        {
+          "start": 0.0,
+          "end": 1.8374624954954955,
+          "keys": [
+            "a"
+          ],
+          "look": ""
+        },
+        {
+          "start": 1.8374624954954955,
+          "end": 4.5101352162162165,
+          "keys": [
+            "w"
+          ],
+          "look": ""
+        },
+        {
+          "start": 4.5101352162162165,
+          "end": 6.347597711711712,
+          "keys": [
+            "d"
+          ],
+          "look": ""
+        },
+        {
+          "start": 6.347597711711712,
+          "end": 9.020270432432433,
+          "keys": [
+            "s"
+          ],
+          "look": ""
+        },
+        {
+          "start": 9.020270432432433,
+          "end": 10.857732927927929,
+          "keys": [
+            "a"
+          ],
+          "look": ""
+        },
+        {
+          "start": 10.857732927927929,
+          "end": 13.53040564864865,
+          "keys": [
+            "w"
+          ],
+          "look": ""
+        },
+        {
+          "start": 13.53040564864865,
+          "end": 15.367868144144143,
+          "keys": [
+            "d"
+          ],
+          "look": ""
+        },
+        {
+          "start": 15.367868144144143,
+          "end": 18.040540864864866,
+          "keys": [
+            "s"
+          ],
+          "look": ""
+        },
+        {
+          "start": 18.040540864864866,
+          "end": 18.541667,
+          "keys": [
+            "a"
+          ],
+          "look": ""
+        }
+      ],
+      "action_source": "camera_data.json / trajectory_reviewer.infer_sequence"
+    },
+    {
+      "id": "dynamic-adventure",
+      "title": "The village adventurer",
+      "prompt": "An adventurer sets out from a sunlit village toward the countryside.",
+      "video": "videos/results/video_with_movement2.mp4",
+      "input_image": "assets/memory-inputs/dynamic-adventure.jpg",
+      "duration": 15.0,
+      "actions": [
+        {
+          "start": 0.0,
+          "end": 4.875,
+          "keys": [
+            "w"
+          ],
+          "look": ""
+        },
+        {
+          "start": 4.875,
+          "end": 8.208333333333334,
+          "keys": [],
+          "look": "left"
+        },
+        {
+          "start": 8.208333333333334,
+          "end": 11.541666666666666,
+          "keys": [
+            "w"
+          ],
+          "look": ""
+        },
+        {
+          "start": 11.541666666666666,
+          "end": 14.916666666666666,
+          "keys": [],
+          "look": "left"
+        },
+        {
+          "start": 14.916666666666666,
+          "end": 15.0,
+          "keys": [],
+          "look": ""
+        }
+      ],
+      "action_source": "existing_video_movement_hud"
+    },
+    {
+      "id": "dynamic-lego",
+      "title": "The LEGO forest run",
+      "prompt": "Two LEGO minifigures run along a forest path; the red-capped figure raises an arm while the other carries a camera.",
+      "video": "videos/memory/dynamic-lego.mp4",
+      "input_image": "assets/memory-cases/dynamic-lego/input_image.png",
+      "duration": 17.0,
+      "actions": [
+        {
+          "start": 0.0,
+          "end": 2.3385886306306305,
+          "keys": [
+            "a"
+          ],
+          "look": ""
+        },
+        {
+          "start": 2.3385886306306305,
+          "end": 4.5101352162162165,
+          "keys": [
+            "s"
+          ],
+          "look": ""
+        },
+        {
+          "start": 4.5101352162162165,
+          "end": 6.848723846846847,
+          "keys": [
+            "d"
+          ],
+          "look": ""
+        },
+        {
+          "start": 6.848723846846847,
+          "end": 9.020270432432433,
+          "keys": [
+            "w"
+          ],
+          "look": ""
+        },
+        {
+          "start": 9.020270432432433,
+          "end": 11.358859063063063,
+          "keys": [
+            "a"
+          ],
+          "look": ""
+        },
+        {
+          "start": 11.358859063063063,
+          "end": 13.53040564864865,
+          "keys": [
+            "s"
+          ],
+          "look": ""
+        },
+        {
+          "start": 13.53040564864865,
+          "end": 15.86899427927928,
+          "keys": [
+            "d"
+          ],
+          "look": ""
+        },
+        {
+          "start": 15.86899427927928,
+          "end": 17.0,
+          "keys": [
+            "w"
+          ],
+          "look": ""
+        }
+      ],
+      "action_source": "camera_data.json / trajectory_reviewer.infer_sequence"
+    },
+    {
+      "id": "dynamic-city-074",
+      "title": "City Street Corner",
+      "prompt": "A bustling \"City Street Corner\" scene featuring a sports-themed store and a lone pedestrian preparing for the day.",
+      "video": "videos/memory/dynamic-city-074.mp4",
+      "input_image": "assets/memory-cases/dynamic-city-074/input_image.png",
+      "duration": 13.875,
+      "actions": [
+        {
+          "start": 0.0,
+          "end": 2.0060240963855422,
+          "keys": [
+            "s"
+          ],
+          "look": ""
+        },
+        {
+          "start": 2.0060240963855422,
+          "end": 3.3433734939759034,
+          "keys": [
+            "d"
+          ],
+          "look": ""
+        },
+        {
+          "start": 3.3433734939759034,
+          "end": 5.349397590361446,
+          "keys": [
+            "w"
+          ],
+          "look": ""
+        },
+        {
+          "start": 5.349397590361446,
+          "end": 6.686746987951807,
+          "keys": [
+            "a"
+          ],
+          "look": ""
+        },
+        {
+          "start": 6.686746987951807,
+          "end": 8.69277108433735,
+          "keys": [
+            "s"
+          ],
+          "look": ""
+        },
+        {
+          "start": 8.69277108433735,
+          "end": 10.03012048192771,
+          "keys": [
+            "d"
+          ],
+          "look": ""
+        },
+        {
+          "start": 10.03012048192771,
+          "end": 12.036144578313253,
+          "keys": [
+            "w"
+          ],
+          "look": ""
+        },
+        {
+          "start": 12.036144578313253,
+          "end": 13.875,
+          "keys": [
+            "a"
+          ],
+          "look": ""
+        }
+      ],
+      "action_source": "/cos/Project/world_model/WorldScore/worldscore_output_dynamic/legomem_lingbotv2/static/photorealistic/outdoor/city/074/camera_data.json / trajectory_reviewer.infer_sequence"
+    },
+    {
+      "id": "dynamic-dining-056",
+      "title": "Cozy Café Interior",
+      "prompt": "In the Cozy Cafe Interior, sunlight filters through large windows onto rustic tables and vibrant hanging plants.",
+      "video": "videos/memory/dynamic-dining-056.mp4",
+      "input_image": "assets/memory-cases/dynamic-dining-056/input_image.png",
+      "duration": 16.541667,
+      "actions": [
+        {
+          "start": 0.0,
+          "end": 2.1721380909090913,
+          "keys": [
+            "s"
+          ],
+          "look": ""
+        },
+        {
+          "start": 2.1721380909090913,
+          "end": 4.0101010909090915,
+          "keys": [
+            "a"
+          ],
+          "look": ""
+        },
+        {
+          "start": 4.0101010909090915,
+          "end": 6.182239181818182,
+          "keys": [
+            "w"
+          ],
+          "look": ""
+        },
+        {
+          "start": 6.182239181818182,
+          "end": 8.020202181818183,
+          "keys": [
+            "d"
+          ],
+          "look": ""
+        },
+        {
+          "start": 8.020202181818183,
+          "end": 10.192340272727272,
+          "keys": [
+            "s"
+          ],
+          "look": ""
+        },
+        {
+          "start": 10.192340272727272,
+          "end": 12.030303272727274,
+          "keys": [
+            "a"
+          ],
+          "look": ""
+        },
+        {
+          "start": 12.030303272727274,
+          "end": 14.202441363636364,
+          "keys": [
+            "w"
+          ],
+          "look": ""
+        },
+        {
+          "start": 14.202441363636364,
+          "end": 16.541667,
+          "keys": [
+            "d"
+          ],
+          "look": ""
+        }
+      ],
+      "action_source": "/cos/Project/world_model/WorldScore/worldscore_output_dynamic/legomem_lingbotv2/static/photorealistic/indoor/dining_spaces/056/camera_data.json / trajectory_reviewer.infer_sequence"
+    }
+  ]
+}

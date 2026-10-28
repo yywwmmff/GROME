@@ -1,0 +1,119 @@
+/* Light palettes, selected by the picker or the theme query parameter. */
+:root[data-theme="azure"]{--bg:#f5f8fe;--surface:#fff;--surface-raised:#eaf0fa;--text:#112137;--muted:#3c4d65;--quiet:#4b5c72;--line:#cfdaea;--orange:#285fd3;--pink:#9961bb;--accent-soft:#e4edfd;--nav-bg:#f5f8fef2}
+:root[data-theme="sage"]{--bg:#f3f8f5;--surface:#fff;--surface-raised:#e5f0e9;--text:#142f26;--muted:#374f43;--quiet:#465e51;--line:#cbded2;--orange:#13765d;--pink:#a26485;--accent-soft:#deeee4;--nav-bg:#f3f8f5f2}
+:root[data-theme="violet"]{--bg:#f8f6fc;--surface:#fff;--surface-raised:#eee8f6;--text:#271b35;--muted:#50415f;--quiet:#604e6f;--line:#ddd3e9;--orange:#7951b1;--pink:#b24e7e;--accent-soft:#ede4f8;--nav-bg:#f8f6fcf2}
+:root[data-theme="coral"]{--bg:#fcf8f4;--surface:#fff;--surface-raised:#f5eae3;--text:#2f2420;--muted:#51423b;--quiet:#615048;--line:#e9d7cd;--orange:#983d38;--pink:#8e6499;--accent-soft:#f7e5df;--nav-bg:#fcf8f4f2}
+html[data-theme]{color-scheme:light;--paper:var(--surface-raised)}
+html[data-theme] body{background:radial-gradient(ellipse 900px 600px at 50% 0,var(--accent-soft),transparent 80%),var(--bg);color:var(--text)}
+html[data-theme] .site-nav{background:var(--nav-bg)}
+html[data-theme] :is(.project-hero h1 .hero-title,.project-hero h1 .hero-paper-name,.hero-authors,.comparison-row-heading h3,.baseline-model h3,.media-card-caption h3,.application-description h3){color:var(--text)}
+html[data-theme] :is(.hero-abstract,.hero-affiliations,.hero-affiliations .author-notes,.abstract-content p,.dim,.section-copy,.heading-aside,.application-description p,.comparison-lenses p,.site-footer,.memory-explanation p){color:var(--muted)}
+html[data-theme] :is(.hero-authors sup,.hero-affiliations sup){color:var(--orange)}
+html[data-theme] .hero-affiliations a{border-color:var(--line)}
+html[data-theme] :is(.button,.secondary,.text-link,.case-tab,.comparison-checkpoints button,.tag-filter,.filter,.keys button){border-color:var(--line)}
+html[data-theme] :is(.button:hover,.secondary:hover,.case-tab:hover,.case-tab.active,.tag-filter.active,.filter.active,.trajectory-segment.active,.trajectory-segment:hover){background:var(--accent-soft);color:var(--orange);border-color:var(--orange)}
+html[data-theme] :is(.primary,.button.primary,.keys button.active){background:var(--orange);color:#fff;border-color:var(--orange)}
+html[data-theme] :is(.primary:hover,.button.primary:hover){background:var(--orange);filter:brightness(1.08)}
+html[data-theme] :is(select,option){background:var(--surface);color:var(--text);border-color:var(--line)}
+html[data-theme] :is(.baseline-panel,.animated-figure,.diagram-controls,.diagram-explainer,.figure-resource,.comparison-image-card,.comparison-prompt-card,.comparison-pose-card,.comparison-pose-status,.comparison-scene-picker select,.application-card .application-choice select,.memory-viewer-panel,.memory-panel-heading,.memory-viewer-footer,.memory-settings-menu,.memory-settings-menu select){background:var(--surface);border-color:var(--line);color:var(--text)}
+html[data-theme] :is(.diagram-tabs button,.diagram-playback button,.diagram-caption-copy,.diagram-step-navigation button,.figure-resource,.comparison-prompt-card p,.comparison-pose-card p,.comparison-condition-heading,.comparison-prompt-card .comparison-scene-picker,.gallery-tag-list small,.duration-tag,.memory-viewer-footer p){color:var(--muted)}
+html[data-theme] :is(.diagram-tabs button[aria-pressed=true],.diagram-step-navigation button,.gallery-tag-list small){background:var(--accent-soft);border-color:var(--line);color:var(--orange)}
+html[data-theme] :is(.diagram-tabs button:hover,.diagram-playback button:hover,.comparison-checkpoints button:hover){background:var(--accent-soft);color:var(--orange)}
+html[data-theme] :is(.trajectory-segment,.keys button){background:var(--surface)}
+html[data-theme] :is(.trajectory-segment strong,.trajectory-segment small,.action-readout small){color:var(--muted)}
+html[data-theme] .comparison-condition-heading>span{color:var(--orange)}
+html[data-theme] .trajectory-segment:before{background:var(--line)}
+html[data-theme] :is(.memory-band,.method-section){background:var(--surface-raised)}
+html[data-theme] .identity-carousel>.identity-side-arrow{background:var(--surface);border-color:var(--line);color:var(--orange);box-shadow:0 3px 15px #20354712}
+html[data-theme] .identity-carousel>.identity-side-arrow:hover{background:var(--accent-soft);border-color:var(--orange)}
+html[data-theme] #explorer .explorer-view{background:var(--surface)}
+html[data-theme] #explorer :is(.view-heading,.progressive-subheading,.world-toolbar,.revisit-panel){background:var(--surface-raised);border-color:var(--line)}
+html[data-theme] #explorer :is(.view-heading h3,.view-heading button,.world-view-switch button,.revisit-heading h4,.revisit-heading>button,.revisit-location,.revisit-help,.progressive-subheading){color:var(--text)}
+html[data-theme] #explorer :is(.world-view-switch button[aria-pressed=true],.revisit-location.active){background:var(--accent-soft);border-color:var(--orange);color:var(--orange)}
+html[data-theme] #explorer .inset-menu{background:var(--surface);border-color:var(--line);color:var(--text)}
+html[data-theme] :is(.revisit-lightbox,.media-dialog){background:var(--surface);color:var(--text);border-color:var(--line)}
+html[data-theme] .revisit-lightbox :is(h3,figcaption,#revisit-close){color:var(--text)}
+html[data-theme] .revisit-lightbox :is(p,.revisit-dialog-story){color:var(--muted)}
+html[data-theme] .revisit-lightbox :is(#revisit-anchor-toggle,.revisit-lightbox-frames button){color:var(--orange);background:var(--accent-soft);border-color:var(--line)}
+/* Video pixels, point-cloud renderings, and the animated figure artwork retain their original colors. */
+
+/* Media frames and viewer surfaces follow the selected page palette. */
+html[data-theme] :is(video,img,.application-video-stage,.comparison-image-preview,.gallery-image,.memory-canvas,.memory-status,.world-status){background-color:var(--surface);border-color:var(--line)}
+html[data-theme] #explorer{background:var(--surface);border-color:var(--line)}
+html[data-theme] #explorer :is(.stage-topline,.transport,.timeline-label,.action-timeline,.actions,.explorer-view,.video-frame,.building-canvas,.world-canvas,.warp-viewport,.revisit-frame,.revisit-map-card){background:var(--surface);border-color:var(--line);color:var(--text)}
+html[data-theme] #explorer :is(.view-heading,.progressive-subheading,.world-toolbar,.revisit-panel){background:var(--surface-raised);border-color:var(--line);color:var(--muted)}
+html[data-theme] #explorer :is(.revisit-map-card span,.world-time,.world-view-badge,.camera-match,.orbit-hint,.check,.replay-note,.video-play){color:var(--muted)}
+html[data-theme] #explorer .revisit-map-card.active{background:var(--accent-soft);border-color:var(--orange)}
+html[data-theme] #explorer .world-canvas:before{background:none}
+html[data-theme] #explorer .video-play{background:var(--surface);border-color:var(--line);color:var(--orange)}
+html[data-theme] .diagram-vector [data-light-fill]{fill:var(--diagram-light-fill)}
+html[data-theme] .diagram-vector [data-light-stroke]{stroke:var(--diagram-light-stroke)}
+html[data-theme] .comparison-model-option[aria-selected="true"]{background:var(--accent-soft)}
+html[data-theme] #explorer .explorer-triptych .progressive-panel .warp-viewport{background:var(--surface)}
+html[data-theme] #explorer :is(.revisit-frame strong,.inset-settings summary,.world-view-switch button){color:var(--muted)}
+html[data-theme] #explorer .world-view-switch button[aria-pressed="true"]{color:var(--orange)}
+
+/* Small copy needs both stronger contrast and enough size to remain readable. */
+html[data-theme] :is(.eyebrow,.hero-kicker,.nav-caption,.identity-input-label,.comparison-track-label,.application-output-heading,.application-choice>span,.timeline-label,.memory-case-count){color:var(--muted);font-weight:600}
+html[data-theme] :is(.identity-action-help,.memory-case-count,.duration-tag,.figure-resource,.small-note,.gallery-meta span,.gallery-tag-list small,.site-footer,.comparison-lenses span){color:var(--muted)}
+html[data-theme] .identity-keyboard button:disabled{opacity:.6}
+html[data-theme] :is(.identity-input-label,.application-choice>span,.comparison-track-label,.duration-tag,.figure-resource,.identity-action-help,.memory-case-controls,.gallery-tag-list small){font-size:12px}
+html[data-theme] :is(.memory-case-prompt p,.identity-prompt-panel p){font-size:15px;line-height:1.75}
+html[data-theme] :is(.identity-action-label,.memory-action-panel .identity-action-label,.application-memory-value){font-size:14px}
+html[data-theme] .comparison-input-rail .comparison-prompt-card p{font-size:14px;line-height:1.7;color:var(--text)}
+html[data-theme] .comparison-input-rail .comparison-condition-heading{font-size:11px;font-weight:600;color:var(--muted)}
+html[data-theme] .comparison-condition-heading :is(span,a){color:var(--muted)}
+html[data-theme] .comparison-model-option span{font-size:13px;font-weight:600}
+html[data-theme] .baseline-footer p{font-size:12px;color:var(--muted)}
+html[data-theme] #explorer :is(.view-number,.progressive-subheading,.progressive-subheading time,.revisit-map-card span,.revisit-frame strong,.revisit-frame time,.revisit-location,.revisit-help,.world-time,.world-view-badge,.orbit-hint,.camera-match,.small-note){font-size:11px;font-weight:500;color:var(--muted)}
+html[data-theme] #explorer :is(.world-view-switch button,.inset-settings summary,.timeline-label,.trajectory-segment small,.replay-note){font-size:12px;font-weight:500}
+html[data-theme] #explorer :is(.revisit-frame time,.revisit-location.active,.world-view-switch button[aria-pressed="true"]){color:var(--orange)}
+html[data-theme] #explorer .progressive-panel .progressive-subheading{font-size:11px;color:var(--muted)}
+
+/* A restrained frame system: quieter borders and depth reserved for selection. */
+:root[data-theme="coral"]{--line:#e2dbd5;--surface-raised:#f4efea}
+html[data-theme] :is(.memory-case-card,.identity-inputs,.identity-carousel .media-card,.baseline-panel,.memory-standalone){border-radius:8px;overflow:hidden}
+html[data-theme] .memory-case-output{border-left-color:var(--line)}
+html[data-theme] :is(.comparison-prompt-card,.comparison-image-card,.comparison-pose-card){border-radius:6px}
+html[data-theme] .comparison-video-grid video{border:1px solid var(--line);border-radius:6px}
+html[data-theme] .comparison-video-grid .ours video{border-color:color-mix(in srgb,var(--orange) 45%,var(--line));box-shadow:none}
+html[data-theme] .baseline-model h3>span{border-color:var(--line);color:var(--orange);border-radius:3px;padding:3px 7px;font-size:10px}
+html[data-theme] .comparison-model-track{padding:6px 4px 19px;margin:-6px -4px -10px;gap:12px}
+html[data-theme] .comparison-model-option{border-radius:6px;transition:transform .18s,border-color .18s,box-shadow .18s,background .18s}
+html[data-theme] .comparison-model-option:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--orange) 50%,var(--line));box-shadow:0 5px 12px #30241e12}
+html[data-theme] .comparison-model-option[aria-selected="true"]{background:var(--accent-soft);border-color:var(--orange);box-shadow:0 0 0 1px var(--orange),0 6px 15px color-mix(in srgb,var(--orange) 20%,transparent),0 2px 5px #30241e12}
+html[data-theme] .animated-figure{border:0}
+html[data-theme] .diagram-controls{border-bottom:1px solid var(--line);padding-inline:0}
+html[data-theme] .diagram-explainer{padding-left:0;padding-right:0}
+html[data-theme] .figure-resource{padding-inline:0}
+html[data-theme] #applications .application-card:first-child{border-top:0}
+#applications .application-description h2{font-weight:700}
+html[data-theme] .identity-carousel>.identity-side-arrow{box-shadow:0 2px 10px #20202010;color:var(--text)}
+html[data-theme] .gallery-card{border-radius:7px;overflow:hidden}
+html[data-theme] :is(button,select,a){-webkit-tap-highlight-color:transparent}
+@media(prefers-reduced-motion:reduce){html[data-theme] .comparison-model-option{transition:none}html[data-theme] .comparison-model-option:hover{transform:none}}
+
+/* Keep generation inputs directly beneath their video. */
+#explorer .explorer-video-inputs{flex-shrink:0;border-top:1px solid var(--line);background:var(--surface)}
+#explorer .explorer-input-prompt{border-bottom:1px solid var(--line)}
+#explorer .explorer-video-inputs .identity-input-label{padding:12px 16px 7px}
+#explorer .explorer-input-prompt p{margin:0;padding:0 16px 14px;color:var(--text);font-size:14px;line-height:1.7}
+#explorer .rgb-panel .actions{display:flex;align-items:center;flex-wrap:nowrap;gap:16px;border:0;padding:0 16px 16px}
+#explorer .rgb-panel .keys button{width:40px;height:38px;margin:2px;font-size:18px}
+#explorer .rgb-panel .action-readout{min-width:0;max-width:none;flex:1}
+#explorer .rgb-panel .action-readout>span{font-size:12px;line-height:1.5;font-weight:600}
+#explorer .rgb-panel .action-readout small{max-width:none;font-size:13px;line-height:1.65;color:var(--muted)}
+#explorer .rgb-panel>.video-frame{min-height:260px}
+@media(max-width:700px){#explorer .rgb-panel>.video-frame{flex:none;min-height:0;aspect-ratio:3/2}#explorer .rgb-panel .actions{gap:20px}}
+html[data-theme] #explorer .rgb-panel .keys button{color:var(--text);background:var(--surface);border-color:var(--line)}
+html[data-theme] #explorer .rgb-panel .keys button.active{color:#fff;background:var(--orange);border-color:var(--orange)}
+html[data-theme] #explorer .rgb-panel .keys button:disabled{opacity:.4}
+
+/* Keep thumbnail selection consistent for scenes and model previews. */
+html[data-theme] .scene-thumbnail:hover{border-color:var(--orange);box-shadow:0 3px 9px #30241e14;transform:translateY(-1px)}
+html[data-theme] .scene-thumbnail[aria-pressed="true"]{border-color:var(--orange);background:var(--accent-soft);box-shadow:0 0 0 1px var(--orange),0 4px 10px color-mix(in srgb,var(--orange) 16%,transparent)}
+html[data-theme] .comparison-model-rail .comparison-model-track{gap:8px;padding:4px 3px 10px;margin:-4px -3px -6px;overflow:visible}
+html[data-theme] .comparison-model-rail .comparison-model-option span{font-size:12px;padding:6px 5px;letter-spacing:-.3px}
+@media(max-width:600px){html[data-theme] .comparison-model-rail .comparison-model-option span{font-size:11px;padding-inline:3px}}
+@media(prefers-reduced-motion:reduce){.scene-thumbnail{transition:none}html[data-theme] .scene-thumbnail:hover{transform:none}}
+html[data-theme] .memory-canvas{background:var(--surface)}
