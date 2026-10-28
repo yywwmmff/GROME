@@ -556,3 +556,86 @@ main>:is(.chapter,.world-showcase):not(#capabilities){position:relative;margin-t
 main>:is(.chapter,.world-showcase):not(#capabilities)::before{content:'';position:absolute;top:0;left:var(--page-gutter);right:var(--page-gutter);height:1px;background:var(--line);pointer-events:none}
 @media(max-width:600px){main>:is(.chapter,.world-showcase):not(#capabilities){margin-top:36px;padding-top:24px}}
 @supports(grid-template-rows:subgrid){@media(min-width:901px){#capabilities .memory-subpanel{grid-template-rows:subgrid}}}
+
+/* A quiet left edge opens the synchronized section directory. */
+:root{--card-radius:12px;--control-radius:8px;--sans:Manrope,Inter,'Helvetica Neue',Arial,sans-serif}
+body{padding-left:44px}
+html{scroll-padding-top:28px}
+.language-tools{position:absolute;top:18px;right:max(20px,calc((100vw - var(--page-max-width))/2 + var(--page-gutter)));z-index:15}
+.language-tools .language-switch{margin:0}
+.project-hero h1 .hero-paper-name{white-space:normal;text-wrap:balance}
+.page-directory{position:fixed;inset:0 auto 0 0;width:44px;z-index:40;background:color-mix(in srgb,var(--orange) 6%,var(--surface));border-right:1px solid color-mix(in srgb,var(--orange) 24%,var(--line))}
+.page-directory>summary{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;list-style:none;cursor:pointer;color:var(--orange);font:750 15px/1 var(--sans);letter-spacing:1.4px;writing-mode:vertical-rl;transform:rotate(180deg);gap:12px}
+.page-directory>summary::-webkit-details-marker{display:none}
+.page-directory>summary::before{content:'';width:4px;height:40px;border-radius:4px;background:var(--orange);opacity:.9}
+.page-directory[open]>summary{color:var(--orange);background:color-mix(in srgb,var(--orange) 6%,var(--surface))}
+.page-directory nav{position:absolute;left:43px;top:50%;transform:translateY(-50%);width:310px;max-width:calc(100vw - 44px);max-height:calc(100dvh - 40px);overflow-y:auto;padding:12px;background:var(--surface);border:1px solid var(--line);border-radius:0 var(--card-radius) var(--card-radius) 0;box-shadow:12px 8px 35px rgb(30 25 20 / 10%)}
+.page-directory nav a{display:flex;align-items:center;gap:12px;padding:13px 12px;border-radius:var(--control-radius);font:500 14px/1.5 var(--sans);color:var(--muted);text-decoration:none;overflow-wrap:anywhere}
+.page-directory nav a+a{margin-top:3px}
+.page-directory nav a:is(:hover,.active){background:color-mix(in srgb,var(--orange) 9%,var(--surface));color:var(--orange)}
+.page-directory nav a.active{box-shadow:inset 3px 0 var(--orange);font-weight:650}
+.directory-number{flex:none;color:var(--orange);font:12px var(--mono)}
+.page-directory>summary:focus-visible,.page-directory nav a:focus-visible{outline:2px solid var(--orange);outline-offset:-3px}
+#explorer .world-toolbar{flex-wrap:wrap;gap:8px}
+#explorer .world-view-switch{min-width:0;flex-wrap:wrap}
+#explorer .inset-settings{flex-shrink:0;margin-left:auto}
+#explorer .inset-menu{position:fixed;inset:auto;margin:0;width:min(265px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow:auto;border-radius:var(--card-radius);padding:18px;box-sizing:border-box}
+#explorer .inset-menu .layer-control{gap:16px;min-width:0}
+#explorer .inset-menu .layer-control span{min-width:0;overflow-wrap:anywhere}
+#explorer .inset-menu .layer-control input{flex-shrink:0}
+@media(max-width:600px){
+ body{padding-left:34px}
+ .page-directory{width:34px}
+ .page-directory nav{left:33px;width:290px;max-width:calc(100vw - 48px);padding:10px}
+ .page-directory>summary{font-size:13px}
+ .language-tools{top:12px;right:16px}
+ .project-hero{padding-top:70px}
+}
+
+/* Layers is a text control, rather than the narrow icon button used by insets. */
+#explorer .world-overview-panel .inset-settings{width:auto;min-width:0}
+#explorer .world-overview-panel .inset-settings>summary{display:flex;align-items:center;justify-content:center;gap:8px;width:auto;min-width:78px;height:34px;padding:7px 11px;line-height:1.3;white-space:nowrap;border:1px solid var(--line);border-radius:var(--control-radius);background:var(--surface);font:600 12px/1.3 var(--sans)}
+#explorer .world-overview-panel .inset-settings>summary span{flex-shrink:0;line-height:1}
+#explorer .world-overview-panel .inset-settings[open]>summary{border-color:var(--orange);color:var(--orange)}
+
+/* The directory is always visible, with dedicated space beside the content. */
+:root{--directory-width:220px}
+body{padding-left:var(--directory-width)}
+.page-directory{position:fixed;inset:0 auto 0 0;width:var(--directory-width);display:flex;flex-direction:column;padding:28px 12px 20px;background:var(--surface);border-right:1px solid var(--line);overflow-y:auto}
+.directory-heading{flex:none;margin:0;padding:0 12px 20px;color:var(--text);font:750 17px/1.4 var(--sans);letter-spacing:0}
+.page-directory nav{position:static;display:block;visibility:visible;opacity:1;pointer-events:auto;transform:none;transition:none;width:100%;max-width:none;max-height:none;overflow:visible;padding:0;border:0;border-radius:0;box-shadow:none;background:transparent}
+.page-directory nav a{gap:10px;padding:12px 10px;font-size:13px;line-height:1.55}
+@media(max-width:1100px){:root{--directory-width:184px}.page-directory{padding-inline:8px}.page-directory nav a{gap:8px;padding-inline:9px;font-size:12px}}
+@media(max-width:600px){
+ :root{--directory-width:112px}
+ body{padding-left:var(--directory-width)}
+ .page-directory{width:var(--directory-width);padding:22px 6px 16px}
+ .directory-heading{padding:0 6px 14px;font-size:14px}
+ .page-directory nav{position:static;width:100%;max-width:none;padding:0}
+ .page-directory nav a{align-items:flex-start;gap:6px;padding:10px 6px;font-size:11px;line-height:1.5}
+ .directory-number{font-size:10px;line-height:1.65}
+}
+@media(max-width:600px){
+ #explorer .transport{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px}
+ #explorer #play{grid-column:1;grid-row:1;min-width:0}
+ #explorer #time{grid-column:2/4;grid-row:1;min-width:0;justify-self:end}
+ #explorer #seek{grid-column:1;grid-row:2;width:100%;min-width:0}
+ #explorer #restart{grid-column:2;grid-row:2}
+ #explorer #speed{grid-column:3;grid-row:2}
+ .diagram-controls{display:flex;flex-direction:column;align-items:stretch;gap:10px}
+ .diagram-tabs{flex-wrap:wrap;min-width:0}
+ .diagram-playback{display:flex;flex-wrap:wrap;gap:6px;margin-left:0;min-width:0}
+ .diagram-playback button{padding-inline:8px}
+}
+@media(max-width:600px){
+ .project-hero h1 .hero-title{font-size:clamp(44px,16vw,76px)}
+ #explorer .actions{flex-wrap:wrap}
+ #explorer .action-readout{min-width:0;max-width:100%;flex:1 1 140px;overflow-wrap:anywhere}
+}
+
+/* Keep the permanent directory centered vertically within the viewport. */
+.page-directory{justify-content:center}
+.page-directory nav{flex:0 1 auto;max-height:calc(100dvh - 110px);overflow-y:auto}
+@media(max-width:600px){.page-directory nav{max-height:calc(100dvh - 94px)}}
+/* Place the directory above the midpoint, with room for the full list. */
+.page-directory{justify-content:flex-start;padding-top:var(--directory-top,24px)}

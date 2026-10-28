@@ -307,11 +307,27 @@ document.addEventListener('play',event=>{
 },true);
 
 
-const navLinks=[...document.querySelectorAll('.nav-links a')];
-const sectionObserver=new IntersectionObserver(entries=>{
-  for(const entry of entries)if(entry.isIntersecting)navLinks.forEach(link=>link.classList.toggle('active',link.hash===`#${entry.target.id}`));
-},{rootMargin:'-15% 0px -55% 0px'});
-for(const id of ['capabilities','long-horizon','applications','memory','explorer','method','comparisons','results'])sectionObserver.observe($(id));
+// The permanent left directory follows the visible section as the page scrolls.
+const pageDirectory=$('page-directory');
+const directoryLinks=[...pageDirectory.querySelectorAll('a')];
+const directorySections=directoryLinks.map(link=>$(link.hash.slice(1)));
+let directoryFrame=0;
+function updateDirectory(){
+  directoryFrame=0;
+  const directoryHeight=pageDirectory.querySelector('.directory-heading').offsetHeight+pageDirectory.querySelector('nav').offsetHeight;
+  pageDirectory.style.setProperty('--directory-top',`${Math.max(20,innerHeight/3-directoryHeight/2)}px`);
+  const anchor=Math.min(180,innerHeight*.24);
+  let active=-1;
+  directorySections.forEach((section,index)=>{if(section.getBoundingClientRect().top<=anchor)active=index;});
+  if(innerHeight+scrollY>=document.documentElement.scrollHeight-3)active=directorySections.length-1;
+  directoryLinks.forEach((link,index)=>{link.classList.toggle('active',index===active);if(index===active)link.setAttribute('aria-current','location');else link.removeAttribute('aria-current');});
+  pageDirectory.dataset.activeSection=active<0?'':directorySections[active].id;
+}
+function queueDirectory(){if(!directoryFrame)directoryFrame=requestAnimationFrame(updateDirectory);}
+window.addEventListener('scroll',queueDirectory,{passive:true});window.addEventListener('resize',queueDirectory);
+new ResizeObserver(queueDirectory).observe(document.querySelector('main'));
+new ResizeObserver(queueDirectory).observe(pageDirectory.querySelector('nav'));
+updateDirectory();
 
 // Expand the input-memory panels beside the application videos.
 for(const prefix of ['continuation','composition']){
@@ -331,12 +347,14 @@ expandWorld.addEventListener('click',()=>{
 const insetSettings=document.querySelector('.inset-settings'),insetMenu=insetSettings.querySelector('.inset-menu');
 function positionInsetMenu(){
   if(!insetSettings.open)return;
-  const box=insetSettings.getBoundingClientRect();
-  insetMenu.style.left=`${Math.max(10,Math.min(innerWidth-275,box.right-265))}px`;
-  const height=insetMenu.getBoundingClientRect().height;
-  insetMenu.style.top=`${Math.max(10,Math.min(innerHeight-height-10,box.bottom+8))}px`;
+  if(!insetMenu.matches(':popover-open'))insetMenu.showPopover();
+  const box=insetSettings.getBoundingClientRect(),menu=insetMenu.getBoundingClientRect();
+  insetMenu.style.left=`${Math.max(16,Math.min(innerWidth-menu.width-16,box.right-menu.width))}px`;
+  const below=box.bottom+8,above=box.top-menu.height-8;
+  insetMenu.style.top=`${Math.max(16,Math.min(innerHeight-menu.height-16,below+menu.height<=innerHeight-16?below:above))}px`;
 }
-insetSettings.addEventListener('toggle',positionInsetMenu);window.addEventListener('resize',positionInsetMenu);
+insetSettings.addEventListener('toggle',()=>{insetSettings.querySelector('summary').setAttribute('aria-expanded',String(insetSettings.open));if(insetSettings.open)positionInsetMenu();else if(insetMenu.matches(':popover-open'))insetMenu.hidePopover();});
+window.addEventListener('resize',positionInsetMenu);
 document.addEventListener('pointerdown',event=>{if(insetSettings.open&&!insetSettings.contains(event.target))insetSettings.open=false;});
 document.addEventListener('keydown',event=>{if(event.key==='Escape'){insetSettings.open=false;if(worldInset.classList.contains('expanded'))expandWorld.click();}});
 window.addEventListener('scroll',()=>{if(insetSettings.open)insetSettings.open=false;},{passive:true});
