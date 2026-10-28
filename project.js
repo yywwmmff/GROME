@@ -248,7 +248,7 @@ fetch('assets/media-catalog.json').then(response=>{if(!response.ok)throw Error('
   const rollouts=catalog.third_person_consistency;
   identityItems=rollouts;
   identityNavigation=sceneThumbnails($('identity-scene-thumbnails'),rollouts,showIdentityPage);identityNavigation.select(identityPage);
-  document.querySelectorAll('[data-identity-index]').forEach(card=>{const item=rollouts[Number(card.dataset.identityIndex)];if(!item)return;setVideo(card.querySelector('video'),item);card.querySelector('h3').textContent=item.title;card.querySelector('[data-identity-duration]').textContent=duration(item.duration);});
+  document.querySelectorAll('[data-identity-index]').forEach(card=>{const item=rollouts[Number(card.dataset.identityIndex)];if(!item)return;setVideo(card.querySelector('video'),item);card.querySelector('h3').textContent=item.title;});
   updateIdentityInputs();
   const continuation=catalog.video_continuation,compositions=catalog.scene_exploration;
   const continuationPanel=memoryPanel('continuation'),compositionPanel=memoryPanel('composition');
