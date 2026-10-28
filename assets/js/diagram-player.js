@@ -64,7 +64,7 @@ class DiagramPlayer{
         return part;
       });
       this.stage.classList.add('is-vector');this.element.dataset.ready='true';this.stage.dataset.totalParts=String(this.parts.length);this.setEnabled(true);this.render();
-    }catch(error){this.element.dataset.ready='fallback';this.stage.querySelector('.diagram-fallback span').textContent='The animated figure is unavailable.';this.element.querySelector('.figure-resource span').textContent='Open the full figure for a static view. Serve this folder over HTTP for the component animation.';console.warn(error.message);}
+    }catch(error){this.element.dataset.ready='fallback';this.stage.querySelector('.diagram-fallback span').textContent='The animated figure is unavailable.';const note=this.element.querySelector('.figure-resource span');if(note)note.textContent='Open the full figure for a static view. Serve this folder over HTTP for the component animation.';console.warn(error.message);}
   }
   currentIndex(){if(!this.steps)return 0;if(this.full)return this.steps.length-1;for(let i=this.steps.length-1;i>=0;i--)if(this.time>=this.steps[i].start)return i;return 0;}
   jump(index){if(!this.steps||index<0)return;this.full=false;this.paused=true;this.time=this.steps[index].start+this.steps[index].duration-.01;this.last=0;this.render();this.updatePlayback();}

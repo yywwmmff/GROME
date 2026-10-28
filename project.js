@@ -10,7 +10,7 @@ const mediaObserver=new IntersectionObserver(entries=>{
 },{rootMargin:'160px'});
 function setVideo(video,item){
   video.pause();video.removeAttribute('src');video.load();
-  video.poster=item.poster??'';video.dataset.src=item.video;mediaObserver.observe(video);
+  video.poster=item.poster??'';const cover=video.parentElement.querySelector('.external-video-cover');if(cover)cover.src=video.poster;video.dataset.src=item.video;mediaObserver.observe(video);
   const box=video.getBoundingClientRect();
   if(box.width>0&&box.height>0&&box.top<innerHeight+160&&box.bottom>-160){video.src=video.dataset.src;delete video.dataset.src;video.load();}
 }
@@ -21,6 +21,10 @@ function sceneThumbnails(host,items,choose){
   const buttons=items.map((item,index)=>{const button=document.createElement('button');button.type='button';button.className='scene-thumbnail';button.dataset.sceneIndex=String(index);const label=item.title??item.label??'Scene';button.title=label;button.setAttribute('aria-label',`Select ${label}`);button.setAttribute('aria-pressed','false');const image=document.createElement('img');image.src=item.input_image??item.poster??item.image;image.alt='';image.loading='lazy';button.append(image);button.addEventListener('click',()=>choose(index));return button;});
   host.replaceChildren(...buttons);
   return {select(index){host.dataset.selectedIndex=String(index);buttons.forEach((button,i)=>button.setAttribute('aria-pressed',String(i===index)));},label(index,label){buttons[index].title=label;buttons[index].setAttribute('aria-label',`Select ${label}`);}};
+}
+function cyclicSceneSteps(prefix,count,choose){
+  const step=offset=>{const index=Number($(prefix+'-thumbnails').dataset.selectedIndex??0);choose((index+offset+count)%count);};
+  $(prefix+'-previous').addEventListener('click',()=>step(-1));$(prefix+'-next').addEventListener('click',()=>step(1));
 }
 const prettyStyle=style=>({static:'Static scene',dynamic:'Dynamic scene'}[style]??style.replaceAll('_',' '));
 
@@ -45,7 +49,31 @@ dialog.addEventListener('close',()=>{dialogVideo.pause();dialogVideo.removeAttri
 
 let galleryItems=[],galleryFilter='all',galleryTag='all',galleryExpanded=false;
 const tagLabels={anime:'Anime',illustration:'Illustration','ink-painting':'Ink painting',nature:'Nature',urban:'Urban',interior:'Interiors',animals:'Animals',realistic:'Photorealistic'};
+let stopGalleryPreview=()=>{};
+const galleryPreviewObserver=new IntersectionObserver(entries=>{
+  for(const entry of entries)if(!entry.isIntersecting&&entry.target.classList.contains('is-previewing'))stopGalleryPreview();
+});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)stopGalleryPreview();});
+function attachGalleryPreview(button,imageBox,item,existingPreview=null){
+  const preview=existingPreview??document.createElement('video');preview.className='gallery-preview';preview.muted=true;preview.defaultMuted=true;preview.loop=true;preview.playsInline=true;preview.preload='none';preview.setAttribute('aria-hidden','true');preview.tabIndex=-1;imageBox.append(preview);
+  let requested=false;
+  const stop=()=>{requested=false;preview.pause();if(preview.readyState)preview.currentTime=0;button.classList.remove('is-previewing');};
+  const start=()=>{
+    if(dialog.open||document.hidden)return;
+    stopGalleryPreview();stopGalleryPreview=stop;requested=true;button.classList.add('is-previewing');
+    if(preview.dataset.src){preview.src=preview.dataset.src;delete preview.dataset.src;}
+    if(!preview.hasAttribute('src'))preview.src=(typeof item==='function'?item():item).video;
+    preview.play().catch(()=>{if(requested)stop();});
+  };
+  button.addEventListener('pointerenter',event=>{if(event.pointerType==='mouse')start();});
+  button.addEventListener('pointerleave',stop);
+  button.addEventListener('focus',()=>{if(button.matches(':focus-visible'))start();});
+  button.addEventListener('blur',stop);
+  galleryPreviewObserver.observe(button);
+}
 function drawGallery(){
+  stopGalleryPreview();
+  $('gallery-grid').querySelectorAll('.gallery-card').forEach(card=>galleryPreviewObserver.unobserve(card));
   const matched=galleryItems.filter(item=>(galleryFilter==='all'||item.scene_type===galleryFilter)&&(galleryTag==='all'||item.tags?.includes(galleryTag)));
   const visible=galleryExpanded?matched:matched.slice(0,6);
   const fragment=document.createDocumentFragment();
@@ -54,11 +82,11 @@ function drawGallery(){
     const title=item.category||'World exploration';const label=title.replaceAll('_',' ');
     button.setAttribute('aria-label',`Play ${prettyStyle(item.style)} ${label}`);
     const imageBox=document.createElement('div');imageBox.className='gallery-image';
-    const image=document.createElement('img');image.src=item.poster;image.alt=`${prettyStyle(item.style)} ${label}`;image.loading='lazy';imageBox.append(image);
+    const image=document.createElement('img');image.src=item.poster;image.alt=`${prettyStyle(item.style)} ${label}`;image.loading='lazy';imageBox.append(image);attachGalleryPreview(button,imageBox,item);
     const meta=document.createElement('div');meta.className='gallery-meta';
     const heading=document.createElement('h3');heading.textContent=label.charAt(0).toUpperCase()+label.slice(1);
     const style=document.createElement('span');style.textContent=prettyStyle(item.style);meta.append(heading,style);const tags=document.createElement('div');tags.className='gallery-tag-list';for(const tag of item.tags??[]){const chip=document.createElement('small');chip.textContent=tagLabels[tag]??tag;tags.append(chip);}meta.append(tags);button.append(imageBox,meta);
-    button.addEventListener('click',()=>openVideo(item,`${prettyStyle(item.style)} · ${label}`));fragment.append(button);
+    button.addEventListener('click',()=>{stopGalleryPreview();openVideo(item,`${prettyStyle(item.style)} · ${label}`);});fragment.append(button);
   }
   $('gallery-grid').replaceChildren(fragment);$('gallery-more').hidden=matched.length<=6;
   $('gallery-more').innerHTML=galleryExpanded?'Show fewer scenes <span>↑</span>':'Show more scenes <span>↓</span>';
@@ -70,8 +98,9 @@ $('gallery-more').addEventListener('click',()=>{galleryExpanded=!galleryExpanded
 
 document.querySelectorAll('.memory-case-carousel').forEach(carousel=>{
   const cards=[...carousel.querySelectorAll('.memory-case-card')];
-  const show=index=>{cards.forEach((card,i)=>{card.hidden=i!==index;if(i!==index)card.querySelector('video')?.pause();});navigation.select(index);};
-  const navigation=sceneThumbnails(carousel.querySelector('.case-thumbnail-rail'),cards.map(card=>({title:card.querySelector('h3').textContent,input_image:card.querySelector('.memory-case-input img').getAttribute('src')})),show);show(0);
+  const rail=carousel.querySelector('.case-thumbnail-rail');
+  const show=index=>{cards.forEach((card,i)=>{card.hidden=i!==index;if(i!==index)card.querySelector('video')?.pause();});cards[index].querySelector('.memory-case-output').append(rail);navigation.select(index);};
+  const navigation=sceneThumbnails(rail,cards.map(card=>({title:card.dataset.caseTitle,input_image:card.querySelector('.memory-case-input img').getAttribute('src')})),show);show(0);
 });
 
 // Read recorded camera controls for every memory example and follow its video clock.
@@ -79,22 +108,19 @@ fetch('assets/memory-cases.json').then(response=>{if(!response.ok)throw Error('M
   const items=[...manifest.static,...manifest.dynamic];
   document.querySelectorAll('[data-memory-case]').forEach(card=>{
     const item=items.find(item=>item.id===card.dataset.memoryCase);if(!item)return;
-    const video=card.querySelector('video'),sequence=card.querySelector('.memory-action-sequence'),keys=[...card.querySelectorAll('[data-memory-key]')];
+    const video=card.querySelector('video'),keys=[...card.querySelectorAll('[data-memory-key]')];
     const segmentKeys=segment=>[...(segment?.keys??[]),...(segment?.look?segment.look.split('+'):[])];
     const used=new Set(item.actions.flatMap(segmentKeys));let frameToken=0;
     const update=()=>{const time=video.currentTime,segment=item.actions.find(segment=>time>=segment.start&&time<segment.end),active=segmentKeys(segment);
       keys.forEach(button=>{const pressed=active.includes(button.dataset.memoryKey);button.classList.toggle('active',pressed);button.setAttribute('aria-pressed',String(pressed));});
-      sequence.querySelectorAll('button').forEach(button=>{const pressed=time>=Number(button.dataset.start)&&time<Number(button.dataset.end);button.classList.toggle('active',pressed);button.setAttribute('aria-pressed',String(pressed));});
-      card.querySelector('.memory-action-label').textContent=active.length?active.map(key=>identityKeyNames[key]).join(' + '):'No input';
     };
     const seek=time=>{const apply=()=>{video.currentTime=Math.min(time+.001,Math.max(0,video.duration-.001));update();};if(video.readyState>=1)apply();else{video.addEventListener('loadedmetadata',apply,{once:true});video.load();}};
-    item.actions.forEach(segment=>{const active=segmentKeys(segment);if(!active.length)return;const button=document.createElement('button');button.type='button';button.dataset.start=String(segment.start);button.dataset.end=String(segment.end);button.textContent=active.map(key=>identityKeySymbols[key]??key.toUpperCase()).join(' + ');button.setAttribute('aria-label',`${active.map(key=>identityKeyNames[key]).join(' + ')} at ${segment.start.toFixed(1)} seconds`);button.addEventListener('click',()=>seek(segment.start));sequence.append(button);});
     keys.forEach(button=>{button.disabled=!used.has(button.dataset.memoryKey);button.addEventListener('click',()=>{const matches=item.actions.filter(segment=>segmentKeys(segment).includes(button.dataset.memoryKey));const next=matches.find(segment=>segment.start>video.currentTime+.05)??matches[0];if(next)seek(next.start);});});
     for(const event of ['timeupdate','seeking','seeked','loadedmetadata','ended'])video.addEventListener(event,update);
     video.addEventListener('play',()=>{const token=++frameToken;const tick=()=>{if(token!==frameToken||video.paused)return;update();if(video.requestVideoFrameCallback)video.requestVideoFrameCallback(tick);else requestAnimationFrame(tick);};tick();});
     video.addEventListener('pause',()=>{frameToken++;update();});update();
   });
-}).catch(error=>{document.querySelectorAll('.memory-action-label').forEach(label=>label.textContent='Recorded controls unavailable.');console.warn(error.message);});
+}).catch(error=>console.warn(error.message));
 
 const comparisonRows=[];
 const comparisonVideos=[];
@@ -204,21 +230,11 @@ function showIdentityPage(page){
   identityCarousel.dataset.page=String(identityPage);identityNavigation?.select(identityPage);updateIdentityInputs();
 }
 function selectedIdentityVideo(){return identityCards[identityPage].querySelector('video');}
-const identityKeyNames={w:'Move forward',a:'Move left',s:'Move backward',d:'Move right',up:'Look up',left:'Look left',down:'Look down',right:'Look right'};
-const identityKeySymbols={up:'↑',left:'←',down:'↓',right:'→'};
 function identitySegmentKeys(segment){return [...(segment?.keys??[]),...(segment?.look?segment.look.split('+'):[])];}
 function updateIdentityInputs(){
   const item=identityItems[identityPage];if(!item)return;
   $('identity-input-image').src=item.input_image;$('identity-input-image').alt=`Input image for ${item.title}`;
   $('identity-prompt').textContent=item.prompt;
-  const fragment=document.createDocumentFragment();
-  for(const segment of item.actions??[]){
-    const keys=identitySegmentKeys(segment);if(!keys.length)continue;
-    const button=document.createElement('button');button.type='button';button.textContent=keys.map(key=>identityKeySymbols[key]??key.toUpperCase()).join(' + ');
-    button.dataset.start=String(segment.start);button.dataset.end=String(segment.end);button.setAttribute('aria-label',`${keys.map(key=>identityKeyNames[key]).join(' + ')} at ${segment.start.toFixed(1)} seconds`);
-    button.addEventListener('click',()=>seekIdentity(segment.start));fragment.append(button);
-  }
-  $('identity-action-sequence').replaceChildren(fragment);
   const usedKeys=new Set((item.actions??[]).flatMap(identitySegmentKeys));
   for(const key of identityCarousel.querySelectorAll('[data-identity-key]'))key.disabled=!usedKeys.has(key.dataset.identityKey);
   updateIdentityAction();
@@ -228,8 +244,6 @@ function updateIdentityAction(){
   const segment=item?.actions?.find(segment=>time>=segment.start&&time<segment.end);
   const keys=identitySegmentKeys(segment);
   for(const button of identityCarousel.querySelectorAll('[data-identity-key]')){const active=keys.includes(button.dataset.identityKey);button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));}
-  for(const button of $('identity-action-sequence').querySelectorAll('button')){const active=time>=Number(button.dataset.start)&&time<Number(button.dataset.end);button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));}
-  $('identity-action-label').textContent=keys.length?keys.map(key=>identityKeyNames[key]).join(' + '):'No input';
 }
 function seekIdentity(time){
   const video=selectedIdentityVideo();
@@ -248,26 +262,33 @@ fetch('assets/media-catalog.json').then(response=>{if(!response.ok)throw Error('
   const rollouts=catalog.third_person_consistency;
   identityItems=rollouts;
   identityNavigation=sceneThumbnails($('identity-scene-thumbnails'),rollouts,showIdentityPage);identityNavigation.select(identityPage);
-  document.querySelectorAll('[data-identity-index]').forEach(card=>{const item=rollouts[Number(card.dataset.identityIndex)];if(!item)return;setVideo(card.querySelector('video'),item);card.querySelector('h3').textContent=item.title;});
+  document.querySelectorAll('[data-identity-index]').forEach(card=>{const item=rollouts[Number(card.dataset.identityIndex)];if(!item)return;setVideo(card.querySelector('video'),item);card.querySelector('video').setAttribute('aria-label',item.title);});
   updateIdentityInputs();
   const continuation=catalog.video_continuation,compositions=catalog.scene_exploration;
   const continuationPanel=memoryPanel('continuation'),compositionPanel=memoryPanel('composition');
   const continuationManifest=fetch('assets/continuation-memories.json').then(r=>{if(!r.ok)throw Error('Missing continuation memory index');return r.json();});
   const compositionManifest=fetch('assets/composition-memories.json').then(r=>{if(!r.ok)throw Error('Missing composition memory index');return r.json();});
+  for(const [prefix,items] of [['continuation',continuation],['composition',compositions]]){
+    const stage=$(prefix+'-video-stage'),video=$(prefix+'-video');
+    const selected=()=>items[Number($(prefix+'-thumbnails').dataset.selectedIndex??0)];
+    const cover=document.createElement('img');cover.className='external-video-cover';cover.alt='';cover.loading='lazy';stage.prepend(cover);
+    attachGalleryPreview(stage,stage,selected,video);
+    stage.addEventListener('click',()=>{stopGalleryPreview();const item=selected();openVideo(item,item.title??'World exploration');});
+  }
   let continuationSelection=0,compositionSelection=0,compositionIndex=0;
   async function chooseContinuation(index){
-    const item=continuation[index];if(!item)return;continuationNavigation.select(index);setVideo($('continuation-video'),item);const selection=++continuationSelection;continuationPanel.setEntry(null,'Loading input memory…');
+    const item=continuation[index];if(!item)return;stopGalleryPreview();continuationNavigation.select(index);setVideo($('continuation-video'),item);const selection=++continuationSelection;continuationPanel.setEntry(null,'Loading input memory…');
     try{const manifest=await continuationManifest;if(selection!==continuationSelection)return;continuationPanel.setEntry(manifest.cases[item.video]);}catch(error){if(selection===continuationSelection)continuationPanel.setEntry(null,'The input point cloud could not be loaded.');console.warn(error.message);}
   }
-  const continuationNavigation=sceneThumbnails($('continuation-thumbnails'),continuation,chooseContinuation);
+  const continuationNavigation=sceneThumbnails($('continuation-thumbnails'),continuation,chooseContinuation);cyclicSceneSteps('continuation',continuation.length,chooseContinuation);
   continuationManifest.then(manifest=>continuation.forEach((item,index)=>continuationNavigation.label(index,manifest.cases[item.video]?.label??item.title))).catch(()=>{});
   if(continuation.length)chooseContinuation(0);
   async function chooseCompositionMemory(){
     const selection=++compositionSelection;compositionPanel.setEntry(null,'Loading input memory…');
     try{const manifest=await compositionManifest;if(selection!==compositionSelection)return;const entry=manifest.cases[compositions[compositionIndex].video];compositionPanel.setEntry(entry);}catch(error){if(selection===compositionSelection)compositionPanel.setEntry(null,'The input point cloud could not be loaded.');console.warn(error.message);}
   }
-  function selectComposition(index){compositionIndex=index;const item=compositions[index];if(!item)return;compositionNavigation.select(index);setVideo($('composition-video'),item);chooseCompositionMemory();}
-  const compositionNavigation=sceneThumbnails($('composition-thumbnails'),compositions,selectComposition);
+  function selectComposition(index){compositionIndex=index;const item=compositions[index];if(!item)return;stopGalleryPreview();compositionNavigation.select(index);setVideo($('composition-video'),item);chooseCompositionMemory();}
+  const compositionNavigation=sceneThumbnails($('composition-thumbnails'),compositions,selectComposition);cyclicSceneSteps('composition',compositions.length,selectComposition);
   compositionManifest.then(manifest=>compositions.forEach((item,index)=>compositionNavigation.label(index,manifest.cases[item.video]?.label??item.title))).catch(()=>{});
   if(compositions.length)selectComposition(0);
   galleryItems=catalog.more_results;drawGallery();

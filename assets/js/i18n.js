@@ -58,7 +58,7 @@
     const current=node.nodeValue;if(!current.trim())return;
     let record=textSources.get(node);
     if(!record||current!==record.output){record={source:current,output:current};textSources.set(node,record);}
-    const core=record.source.trim(),translated=translate(core),display=parent.closest('h1,h2,h3,h4,h5,h6')?translated.replace(/[.。]+$/,''):translated,output=record.source.replace(core,display);
+    const core=record.source.trim(),translated=translate(core),display=parent.closest('h1,h2,h3,h4,h5,h6,[data-heading-text]')?translated.replace(/[.。]+$/,''):translated,output=record.source.replace(core,display);
     record.output=output;if(current!==output)node.nodeValue=output;
   }
   function translateAttributes(element){

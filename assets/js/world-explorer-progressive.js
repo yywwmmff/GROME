@@ -9,7 +9,7 @@ let renderer,world,camera,controls,sceneGroup,cloudGroup,pathGroup,frustum,marke
 let currentCloud,pinkCloud,ghostClouds=[],dynamicCache=new Map(),sceneRadius=10;
 let worldDirty=true;
 let playbackToken=0,autoPreview=true;
-let segments=[],activeSegment=-1;
+let segments=[];
 let revisitIndex=0,revisitElements=[];
 const inspection={
   parkour:{title:'The courtyard and the athlete.',copy:'Follow the concrete wall and railings as the viewpoint shifts. Toggle the current subject and its fading trail to inspect the athlete separately from the scene.'},
@@ -17,7 +17,7 @@ const inspection={
   'truck-pose':{title:'A moving cart. A shared space.',copy:'Track the ramp and houses as the cart crosses the scene. Separate the cart and people from the static background with the viewer layers.'}
 };
 function buildTrajectory(){
-  segments=[];activeSegment=-1;
+  segments=[];
   const timeline=selected.timeline??[];
   for(let i=1;i<timeline.length;i++){
     const action=timeline[i],signature=JSON.stringify([action.keys,action.look]);
@@ -25,22 +25,11 @@ function buildTrajectory(){
     else segments.at(-1).end=i+1;
   }
   const keyLabels={a:'Move left',d:'Move right',w:'Move forward',s:'Move backward'};
-  const keySymbols={a:'←',d:'→',w:'↑',s:'↓'};
-  const fragment=document.createDocumentFragment();
-  segments.forEach((segment,index)=>{
+  segments.forEach(segment=>{
     segment.label=segment.keys.length?segment.keys.map(k=>keyLabels[k]??k).join(' + '):segment.look?`Look ${segment.look}`:'Hold';
     segment.description=segment.keys.length?`${segment.label} along the recorded camera path.`:segment.look?`Turn the camera ${segment.look}.`:'Hold the camera position and viewing direction.';
-    const button=document.createElement('button');button.type='button';button.className='trajectory-segment';
-    const start=segment.start/selected.fps,end=segment.end/selected.fps;
-    button.setAttribute('aria-label',`${segment.label}, ${start.toFixed(2)} to ${end.toFixed(2)} seconds`);
-    button.setAttribute('aria-pressed','false');
-    const meta=document.createElement('small'),time=document.createElement('span'),symbol=document.createElement('span');
-    time.textContent=`${start.toFixed(1)}s`;symbol.textContent=segment.keys.map(k=>keySymbols[k]??'').join('')||(segment.look?'↻':'·');meta.append(time,symbol);
-    const title=document.createElement('strong');title.textContent=segment.label;button.append(meta,title);
-    button.title=`${segment.description} Frames ${segment.start}–${segment.end-1}`;
-    button.addEventListener('click',()=>seek(start));fragment.append(button);segment.button=button;
+
   });
-  $('action-timeline').replaceChildren(fragment);
 }
 const status=$('world-status');
 const clockLabel=t=>`${Math.floor(t/60)}:${String(Math.floor(t%60)).padStart(2,'0')}`;
@@ -81,10 +70,6 @@ function updateControls(){
   const labels={w:'FORWARD',a:'MOVE LEFT',s:'BACKWARD',d:'MOVE RIGHT'};
   $('action-label').textContent=frame===0?'INPUT IMAGE':keys.length?keys.map(k=>labels[k]).join(' + '):action?.look?`LOOK ${action.look.toUpperCase()}`:'HOLD POSITION';
   const segmentIndex=segments.findIndex(segment=>frame>=segment.start&&frame<segment.end);
-  if(segmentIndex!==activeSegment){
-    activeSegment=segmentIndex;
-    segments.forEach((segment,index)=>{const active=index===segmentIndex;segment.button.classList.toggle('active',active);segment.button.classList.toggle('passed',index<segmentIndex);segment.button.setAttribute('aria-pressed',String(active));});
-  }
   const segment=segments[segmentIndex];
   if(segment&&frame>0)$('action-label').textContent=segment.label.toUpperCase();
   $('action-description').textContent=frame===0?'One image is the starting observation.':segment?.description??'Recorded camera navigation';
@@ -364,7 +349,6 @@ async function choose(index){
   const base=selected.asset_base;
   rgb.src=base+'generation.mp4';geometry.src=base+(selected.online_warp??'online_warp.mp4');rgb.poster=base+'poster.jpg';geometry.poster=base+'online_warp_poster.jpg';
   const complex=selected.comparison_mode==='complex';
-  $('explorer-story-title').innerHTML=complex?'One scene.<br><span>Connected by memory.</span>':'Leave a place.<br><span>Return to the same view.</span>';
   $('explorer-story-copy').textContent=complex?selected.comparison_description:'Follow the camera through a generated world. Select a marked viewpoint to compare its first visit and later returns.';
   $('explorer-input-prompt').textContent=selected.display_prompt??selected.prompt??'';
   $('camera-count').textContent=selected.frames;
