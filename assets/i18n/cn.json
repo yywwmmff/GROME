@@ -1,6 +1,4 @@
 {
-  "Action control with persistent scene memory.": "基于持久场景记忆的动作控制。",
-  "Persistent scene memory with dynamic entities.": "融合动态实体的持久场景记忆。",
   "One world.": "一个世界。",
   "Disentangled memory.": "解耦记忆。",
   "Factorize memory.": "分解记忆。",
@@ -496,5 +494,7 @@
   "CHARACTER CONSISTENCY & ACTION CONTROL": "人物一致性与动作控制",
   "ENABLE EXTERNAL MEMORY": "外部记忆接入",
   "Previous scene": "上一个场景",
-  "Next scene": "下一个场景"
+  "Next scene": "下一个场景",
+  "Control the camera. Preserve the scene.": "控制相机，保持场景。",
+  "Stable scenes. Evolving entities.": "场景稳定，实体演变。"
 }
