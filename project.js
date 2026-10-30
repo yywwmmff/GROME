@@ -307,26 +307,44 @@ document.addEventListener('play',event=>{
 },true);
 
 
-// The permanent left directory follows the visible section as the page scrolls.
+// A lightweight chapter route follows the reading position.
 const pageDirectory=$('page-directory');
 const directoryLinks=[...pageDirectory.querySelectorAll('a')];
 const directorySections=directoryLinks.map(link=>$(link.hash.slice(1)));
 let directoryFrame=0;
 function updateDirectory(){
   directoryFrame=0;
-  const directoryHeight=pageDirectory.querySelector('.directory-heading').offsetHeight+pageDirectory.querySelector('nav').offsetHeight;
-  pageDirectory.style.setProperty('--directory-top',`${Math.max(20,innerHeight/3-directoryHeight/2)}px`);
   const anchor=Math.min(180,innerHeight*.24);
   let active=-1;
   directorySections.forEach((section,index)=>{if(section.getBoundingClientRect().top<=anchor)active=index;});
   if(innerHeight+scrollY>=document.documentElement.scrollHeight-3)active=directorySections.length-1;
-  directoryLinks.forEach((link,index)=>{link.classList.toggle('active',index===active);if(index===active)link.setAttribute('aria-current','location');else link.removeAttribute('aria-current');});
+  directoryLinks.forEach((link,index)=>{link.classList.toggle('active',index===active);link.classList.toggle('past',index<active);if(index===active)link.setAttribute('aria-current','location');else link.removeAttribute('aria-current');});
   pageDirectory.dataset.activeSection=active<0?'':directorySections[active].id;
+  const nav=pageDirectory.querySelector('nav'),markerY=index=>directoryLinks[index].offsetTop+(matchMedia('(max-width:1199px)').matches?22:20);
+  const first=markerY(0),last=markerY(directoryLinks.length-1);
+  let filled=0;
+  if(active>=0){const next=Math.min(active+1,directoryLinks.length-1),top=directorySections[active].getBoundingClientRect().top,nextTop=directorySections[next].getBoundingClientRect().top;const fraction=next===active?0:Math.max(0,Math.min(1,(anchor-top)/(nextTop-top)));filled=markerY(active)+(markerY(next)-markerY(active))*fraction-first;}
+  nav.style.setProperty('--route-start',`${first}px`);nav.style.setProperty('--route-end',`${last}px`);nav.style.setProperty('--route-progress',`${filled}px`);
 }
 function queueDirectory(){if(!directoryFrame)directoryFrame=requestAnimationFrame(updateDirectory);}
 window.addEventListener('scroll',queueDirectory,{passive:true});window.addEventListener('resize',queueDirectory);
 new ResizeObserver(queueDirectory).observe(document.querySelector('main'));
 new ResizeObserver(queueDirectory).observe(pageDirectory.querySelector('nav'));
+const directoryToggle=$('directory-toggle'),compactDirectory=matchMedia('(max-width:1199px)');
+let directoryIdleTimer;
+pageDirectory.dataset.scrolling='false';
+window.addEventListener('scroll',()=>{
+  if(compactDirectory.matches)return;
+  pageDirectory.dataset.scrolling='true';
+  clearTimeout(directoryIdleTimer);
+  directoryIdleTimer=setTimeout(()=>{pageDirectory.dataset.scrolling='false';},1000);
+},{passive:true});
+function setDirectoryOpen(open){pageDirectory.dataset.open=String(open);directoryToggle.setAttribute('aria-expanded',String(open));pageDirectory.inert=compactDirectory.matches&&!open;}
+directoryToggle.addEventListener('click',()=>setDirectoryOpen(pageDirectory.dataset.open!=='true'));
+directoryLinks.forEach(link=>link.addEventListener('click',()=>setDirectoryOpen(false)));
+document.addEventListener('pointerdown',event=>{if(!pageDirectory.contains(event.target)&&!directoryToggle.contains(event.target))setDirectoryOpen(false);});
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&pageDirectory.dataset.open==='true'){setDirectoryOpen(false);directoryToggle.focus();}});
+compactDirectory.addEventListener('change',()=>setDirectoryOpen(false));setDirectoryOpen(false);
 updateDirectory();
 
 // Expand the input-memory panels beside the application videos.

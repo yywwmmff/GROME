@@ -598,23 +598,6 @@ html{scroll-padding-top:28px}
 #explorer .world-overview-panel .inset-settings>summary span{flex-shrink:0;line-height:1}
 #explorer .world-overview-panel .inset-settings[open]>summary{border-color:var(--orange);color:var(--orange)}
 
-/* The directory is always visible, with dedicated space beside the content. */
-:root{--directory-width:220px}
-body{padding-left:var(--directory-width)}
-.page-directory{position:fixed;inset:0 auto 0 0;width:var(--directory-width);display:flex;flex-direction:column;padding:28px 12px 20px;background:var(--surface);border-right:1px solid var(--line);overflow-y:auto}
-.directory-heading{flex:none;margin:0;padding:0 12px 20px;color:var(--text);font:750 17px/1.4 var(--sans);letter-spacing:0}
-.page-directory nav{position:static;display:block;visibility:visible;opacity:1;pointer-events:auto;transform:none;transition:none;width:100%;max-width:none;max-height:none;overflow:visible;padding:0;border:0;border-radius:0;box-shadow:none;background:transparent}
-.page-directory nav a{gap:10px;padding:12px 10px;font-size:13px;line-height:1.55}
-@media(max-width:1100px){:root{--directory-width:184px}.page-directory{padding-inline:8px}.page-directory nav a{gap:8px;padding-inline:9px;font-size:12px}}
-@media(max-width:600px){
- :root{--directory-width:112px}
- body{padding-left:var(--directory-width)}
- .page-directory{width:var(--directory-width);padding:22px 6px 16px}
- .directory-heading{padding:0 6px 14px;font-size:14px}
- .page-directory nav{position:static;width:100%;max-width:none;padding:0}
- .page-directory nav a{align-items:flex-start;gap:6px;padding:10px 6px;font-size:11px;line-height:1.5}
- .directory-number{font-size:10px;line-height:1.65}
-}
 @media(max-width:600px){
  #explorer .transport{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px}
  #explorer #play{grid-column:1;grid-row:1;min-width:0}
@@ -633,9 +616,71 @@ body{padding-left:var(--directory-width)}
  #explorer .action-readout{min-width:0;max-width:100%;flex:1 1 140px;overflow-wrap:anywhere}
 }
 
-/* Keep the permanent directory centered vertically within the viewport. */
-.page-directory{justify-content:center}
-.page-directory nav{flex:0 1 auto;max-height:calc(100dvh - 110px);overflow-y:auto}
-@media(max-width:600px){.page-directory nav{max-height:calc(100dvh - 94px)}}
-/* Place the directory above the midpoint, with room for the full list. */
-.page-directory{justify-content:flex-start;padding-top:var(--directory-top,24px)}
+/* A lightweight reading route inspired by the Mundo project directory. */
+:root{--directory-width:224px}
+body{padding-left:var(--directory-width)}
+.language-tools{display:flex;align-items:center;gap:16px}
+.directory-toggle{display:none}
+.route-directory{position:fixed;inset:auto auto auto 26px;top:clamp(96px,calc(50dvh - 210px),250px);width:184px;max-height:calc(100dvh - 120px);padding:0;overflow-y:auto;scrollbar-width:thin;display:block;background:transparent;border:0;box-shadow:none;z-index:20}
+.route-directory .directory-heading{margin:0;padding:0 0 22px 27px;color:var(--muted);font:600 12px/1.4 var(--sans);letter-spacing:.08em}
+.route-directory nav{--route-start:0px;--route-end:0px;--route-progress:0px;position:relative;inset:auto;display:block;width:100%;max-width:none;max-height:none;padding:0;margin:0;overflow:visible;visibility:visible;opacity:1;transform:none;transition:none;border:0;border-radius:0;background:transparent;box-shadow:none}
+.route-directory nav::before,.route-directory nav::after{content:'';position:absolute;left:5px;top:var(--route-start);width:1px;height:calc(var(--route-end) - var(--route-start));background:var(--line);pointer-events:none}
+.route-directory nav::after{width:2px;left:4.5px;height:var(--route-progress);background:var(--orange)}
+.route-directory nav a{position:relative;z-index:1;display:flex;align-items:baseline;gap:8px;min-height:38px;padding:9px 2px 9px 25px;margin:0;color:var(--muted);font:500 14px/1.55 var(--sans);text-decoration:none;border-radius:0;background:transparent;box-shadow:none;overflow-wrap:normal;transition:color .2s}
+.route-directory nav a+a{margin-top:5px}
+.route-directory nav a::before{content:'';position:absolute;left:0;top:15px;width:10px;height:10px;border:1px solid var(--quiet);border-radius:2px;background:var(--bg);transition:background .2s,border-color .2s,box-shadow .2s}
+.route-directory .directory-number{flex:none;color:var(--quiet);font:12px/1.8 var(--mono)}
+.route-directory nav a.past::before{background:var(--orange);border-color:var(--orange);opacity:.45}
+.route-directory nav a:is(:hover,.active){color:var(--text);background:transparent;box-shadow:none}
+.route-directory nav a.active{font-weight:650}
+.route-directory nav a.active::before{background:var(--orange);border-color:var(--orange);box-shadow:0 0 0 3px color-mix(in srgb,var(--orange) 14%,transparent)}
+.route-directory nav a.active .directory-number{color:var(--orange)}
+.route-directory nav a:focus-visible{outline:2px solid var(--orange);outline-offset:2px;border-radius:4px}
+@media(max-width:1199px){
+ body{padding-left:0}
+ .language-tools{position:fixed;inset:12px 18px auto auto;z-index:45;padding:6px;border:1px solid var(--line);border-radius:var(--control-radius);background:var(--surface);box-shadow:0 3px 16px rgb(30 25 20 / 5%)}
+ .directory-toggle{display:flex;align-items:center;gap:18px;min-height:30px;padding:4px 8px;border:0;background:transparent;color:var(--text);font:600 13px/1.4 var(--sans)}
+ .directory-toggle-icon{font:300 21px/1 var(--sans);transition:transform .2s}
+ .directory-toggle[aria-expanded=true] .directory-toggle-icon{transform:rotate(45deg)}
+ .route-directory{inset:70px 18px auto auto;top:70px;width:340px;max-width:calc(100vw - 36px);max-height:calc(100dvh - 90px);padding:18px;border:1px solid var(--line);border-radius:var(--card-radius);background:var(--surface);box-shadow:0 12px 35px rgb(30 25 20 / 12%);opacity:0;visibility:hidden;transform:translateY(-6px);pointer-events:none;transition:opacity .2s,transform .2s,visibility .2s;z-index:44}
+ .route-directory[data-open=true]{opacity:1;visibility:visible;transform:none;pointer-events:auto}
+ .route-directory .directory-heading{padding:0 0 12px 25px;font-size:13px}
+ .route-directory nav a{font-size:16px;min-height:42px;padding-block:10px}
+ .route-directory nav a::before{top:17px}
+ .route-directory .directory-number{font-size:12px}
+}
+@media(max-width:600px){
+ .language-tools{top:10px;right:12px;gap:7px;padding:4px}
+ .route-directory{right:12px;max-width:calc(100vw - 24px)}
+ .project-hero h1 .hero-title{font-size:76px}
+}
+@media(prefers-reduced-motion:reduce){.route-directory,.route-directory nav a,.route-directory nav a::before,.directory-toggle-icon{transition:none}}
+
+/* At rest keep only the chapter route; reading and hovering reveal its labels. */
+@media(min-width:1200px){
+ .route-directory .directory-heading,.route-directory nav a>span{opacity:0;transform:translateX(-5px);transition:opacity .22s ease,transform .22s ease}
+ .route-directory:is([data-scrolling=true],:hover,:focus-within) .directory-heading,.route-directory:is([data-scrolling=true],:hover,:focus-within) nav a>span{opacity:1;transform:none}
+}
+@media(prefers-reduced-motion:reduce){.route-directory .directory-heading,.route-directory nav a>span{transition:none}}
+
+/* Keep chapter names on a single line. */
+.route-directory nav a>span:last-child{white-space:nowrap;flex-shrink:0}
+@media(min-width:1200px){
+ :root{--directory-width:370px}
+ .route-directory{width:330px}
+}
+@media(max-width:1199px){
+ .route-directory{width:420px;overflow-x:auto}
+ .route-directory nav{width:max-content;min-width:100%}
+}
+
+/* Center the project independently of the fixed reading directory. */
+body{padding-left:0}
+@media(min-width:1200px){
+ .route-directory{width:330px;overflow:visible;pointer-events:none}
+ .route-directory nav{pointer-events:auto;width:18px}
+ .route-directory nav a{width:18px;padding-right:0}
+ .route-directory:is([data-scrolling=true],:hover,:focus-within) nav{width:330px}
+ .route-directory:is([data-scrolling=true],:hover,:focus-within) nav a{width:330px}
+ .route-directory nav a>span{background:var(--bg);border-radius:3px}
+}
